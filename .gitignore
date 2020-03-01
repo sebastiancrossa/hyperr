@@ -4,3 +4,6 @@ node_modules/
 # next.js
 /.next/
 /out/
+
+frontend/.next/
+frontend/.next
