@@ -2,14 +2,19 @@
 import Link from "next/link";
 
 // Styles
+import NavStyles from "../../styles/NavStyles";
 
 const Nav = () => {
   return (
-    <div>
+    <NavStyles>
       <Link href="/shop">
         <a>Shop</a>
       </Link>
-    </div>
+
+      <Link href="/sell">
+        <a>Sell</a>
+      </Link>
+    </NavStyles>
   );
 };
 
