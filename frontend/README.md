@@ -1,3 +1,3 @@
-# Advanced-React
+# Hyperr - Frontend
 
 frontend
