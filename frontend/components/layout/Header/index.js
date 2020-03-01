@@ -1,11 +1,27 @@
 // Libraries
 import Link from "next/link";
+import Router from "next/router";
+import NProgress from "nprogress";
 
 // Component Imports
 import Nav from "../Nav";
 
 // Styles
 import { Background, Logo } from "./header.style";
+
+Router.onRouteChangeStart = () => {
+  NProgress.start();
+};
+
+Router.onRouteChangeComplete = () => {
+  NProgress.done();
+};
+
+Router.onRouteChangeError = () => {
+  NProgress.done();
+
+  console.error("Routing error!");
+};
 
 export const Header = () => {
   return (
