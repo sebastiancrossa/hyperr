@@ -1,5 +1,5 @@
 // Libraries
-import App, { Container } from "next/app";
+import App from "next/app";
 
 // Component Imports
 import Page from "../components/layout/Page";
@@ -14,7 +14,7 @@ class MyApp extends App {
     const { Component } = this.props;
 
     return (
-      <Container>
+      <div>
         <Page>
           <ThemeProvider theme={theme}>
             <>
@@ -23,7 +23,7 @@ class MyApp extends App {
             </>
           </ThemeProvider>
         </Page>
-      </Container>
+      </div>
     );
   }
 }

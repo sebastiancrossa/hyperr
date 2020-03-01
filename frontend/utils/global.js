@@ -1,6 +1,14 @@
 import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
+    @font-face {
+        font-family: 'radnika_next';
+        src: url('/static/radnikanext-medium-webfont.woff2') format('woff2');
+
+        font-weight: normal;
+        font-style: normal;
+    }
+
     *,
     *::before,
     *::after {
@@ -13,6 +21,7 @@ export default createGlobalStyle`
 
     html {
         box-sizing: border-box;
+        font-size: 10px;
 
         /* Global variables */
         --color-main: ${({ theme }) => theme.colors.main};
@@ -24,6 +33,16 @@ export default createGlobalStyle`
         --color-text: ${({ theme }) => theme.colors.bs};
     }
 
+    body {
+        padding: 0;
+        margin: 0;
+
+        font-family: 'radnika_next';
+
+        font-size: 1.5rem; /* 1.5rem = 15px */;
+        line-height: 2;
+    }
+
     a, 
     input, 
     textarea,
@@ -31,5 +50,7 @@ export default createGlobalStyle`
         outline: none;
         text-decoration: none;
         font-family: inherit;
+
+        color: black;
     }
 `;
