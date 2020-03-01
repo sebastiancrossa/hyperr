@@ -1,7 +1,13 @@
+// Libraries
 import App, { Container } from "next/app";
 
 // Component Imports
 import Page from "../components/layout/Page";
+
+// --- Styled Components --- //
+import { ThemeProvider } from "styled-components";
+import theme from "../utils/theme";
+import GlobalStyles from "../utils/global";
 
 class MyApp extends App {
   render() {
@@ -10,7 +16,12 @@ class MyApp extends App {
     return (
       <Container>
         <Page>
-          <Component />
+          <ThemeProvider theme={theme}>
+            <>
+              <Component />
+              <GlobalStyles />
+            </>
+          </ThemeProvider>
         </Page>
       </Container>
     );

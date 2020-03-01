@@ -2,14 +2,17 @@
 import Header from "../../../components/layout/Header";
 import Meta from "../../misc/Meta";
 
+// Styles
+import { Background, Container } from "./page.style";
+
 const Page = ({ children }) => {
   return (
-    <div>
+    <Background>
       <Meta />
       <Header />
 
-      {children}
-    </div>
+      <Container>{children}</Container>
+    </Background>
   );
 };
 
