@@ -24,13 +24,17 @@ export default createGlobalStyle`
         font-size: 10px;
 
         /* Global variables */
+        --config-width: ${({ theme }) => theme.config.maxWidth};
+
         --color-main: ${({ theme }) => theme.colors.main};
+        --color-white-off: ${({ theme }) => theme.colors.offWhite};
         --color-green: ${({ theme }) => theme.colors.green};
         --color-red: ${({ theme }) => theme.colors.red};
         --color-gray: ${({ theme }) => theme.colors.gray};
         --color-gray-light: ${({ theme }) => theme.colors.grayLight};
         --color-text: ${({ theme }) => theme.colors.text};
-        --color-text: ${({ theme }) => theme.colors.bs};
+        
+        --shadow: ${({ theme }) => theme.colors.bs};
     }
 
     body {
