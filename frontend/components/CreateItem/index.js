@@ -2,17 +2,44 @@
 import { useState } from "react";
 
 import { useMutation } from "@apollo/react-hooks";
-import gql from "react-apollo";
+import gql from "graphql-tag";
 import Form from "../styles/Form";
 import formatMoney from "../../lib/formatMoney";
 
+// --- GRAPHQL --- //
+const CREATE_ITEM_MUTATION = gql`
+  mutation CREATE_ITEM_MUTATION(
+    $title: String!
+    $description: String!
+    $price: Int!
+    $image: String
+    $largeImage: String
+  ) {
+    createItem(
+      data: {
+        title: $title
+        description: $description
+        price: $price
+        image: $image
+        largeImage: $largeImage
+      }
+    ) {
+      title
+      description
+      price
+    }
+  }
+`;
+
 const CreateItem = () => {
+  const [createItem, { data, loading }] = useMutation(CREATE_ITEM_MUTATION);
+
   const [formState, setFormState] = useState({
-    title: "",
-    description: "",
-    image: "",
-    largeImage: "",
-    price: 0
+    title: "Sample ",
+    description: "Sample item",
+    image: "sample.jpg",
+    largeImage: "large-sample.jpg",
+    price: 100
   });
 
   const handleChange = e => {
@@ -27,7 +54,17 @@ const CreateItem = () => {
   };
 
   return (
-    <Form>
+    <Form
+      onSubmit={e => {
+        e.preventDefault();
+
+        createItem({
+          variables: {
+            ...formState
+          }
+        });
+      }}
+    >
       <fieldset>
         <label htmlFor="title">
           Title
@@ -74,3 +111,4 @@ const CreateItem = () => {
 };
 
 export default CreateItem;
+export { CREATE_ITEM_MUTATION };

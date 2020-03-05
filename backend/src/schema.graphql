@@ -11,8 +11,8 @@ type Query {
 # --- Inputs --- #
 input CreateItemInput {
   title: String!
-  description: String
+  description: String!
   price: Int!
-  image: String!
+  image: String
   largeImage: String
 }
