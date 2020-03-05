@@ -6,6 +6,9 @@ import gql from "graphql-tag";
 import Form from "../styles/Form";
 import formatMoney from "../../lib/formatMoney";
 
+// Component Imports
+import Error from "../ErrorMessage";
+
 // --- GRAPHQL --- //
 const CREATE_ITEM_MUTATION = gql`
   mutation CREATE_ITEM_MUTATION(
@@ -32,7 +35,9 @@ const CREATE_ITEM_MUTATION = gql`
 `;
 
 const CreateItem = () => {
-  const [createItem, { data, loading }] = useMutation(CREATE_ITEM_MUTATION);
+  const [createItem, { data, loading, error }] = useMutation(
+    CREATE_ITEM_MUTATION
+  );
 
   const [formState, setFormState] = useState({
     title: "Sample ",
@@ -65,7 +70,8 @@ const CreateItem = () => {
         });
       }}
     >
-      <fieldset>
+      {error && <Error error={error} />}
+      <fieldset disabled={loading} aria-busy={loading}>
         <label htmlFor="title">
           Title
           <input
