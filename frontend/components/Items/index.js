@@ -4,6 +4,10 @@ import { useQuery } from "@apollo/react-hooks";
 
 import gql from "graphql-tag";
 
+// Style
+import { Background, ItemsList } from "./items.styled";
+import Item from "./Item";
+
 // -- QUERIES -- //
 const ALL_ITEMS_QUERY = gql`
   query ALL_ITEMS_QUERY {
@@ -25,13 +29,15 @@ const Items = () => {
     return <div>Loading items...</div>;
   } else {
     return (
-      <div>
+      <Background>
         <p>These are the item names:</p>
 
-        {data.items.map(item => (
-          <p key={item.id}>{item.title}</p>
-        ))}
-      </div>
+        <ItemsList>
+          {data.items.map(item => (
+            <Item key={item.id} item={item} />
+          ))}
+        </ItemsList>
+      </Background>
     );
   }
 };
