@@ -1,5 +1,6 @@
 // Libraries
 import { useState } from "react";
+import Router from "next/router";
 
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
@@ -27,6 +28,7 @@ const CREATE_ITEM_MUTATION = gql`
         largeImage: $largeImage
       }
     ) {
+      id
       title
       description
       price
@@ -60,13 +62,20 @@ const CreateItem = () => {
 
   return (
     <Form
-      onSubmit={e => {
+      onSubmit={async e => {
         e.preventDefault();
 
-        createItem({
+        // Calls the mutation and passes our form state as the variables
+        const res = await createItem({
           variables: {
             ...formState
           }
+        });
+
+        // Sends the user to page of the newly created item
+        Router.push({
+          pathname: "/item",
+          query: { id: res.data.createItem.id }
         });
       }}
     >
