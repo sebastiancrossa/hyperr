@@ -2,7 +2,7 @@
 
 type Mutation {
   createItem(data: CreateItemInput!): Item!
-  updateItem(data: UpdateItemInput!): Item!
+  updateItem(id: ID!, title: String, description: String, price: Int): Item!
 }
 
 type Query {
@@ -17,12 +17,4 @@ input CreateItemInput {
   price: Int!
   image: String
   largeImage: String
-}
-
-input UpdateItemInput {
-  id: ID!
-  title: String
-  description: String
-  price: Int
-  # TODO add the update image flow
 }

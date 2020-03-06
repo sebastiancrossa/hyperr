@@ -24,20 +24,16 @@ const SINGLE_ITEM_QUERY = gql`
 
 const UPDATE_ITEM_MUTATION = gql`
   mutation UPDATE_ITEM_MUTATION(
+    $id: ID!
     $title: String!
-    $description: String!
-    $price: Int!
-    $image: String
-    $largeImage: String
+    $description: String
+    $price: Int
   ) {
     updateItem(
-      data: {
-        title: $title
-        description: $description
-        price: $price
-        image: $image
-        largeImage: $largeImage
-      }
+      id: $id
+      title: $title
+      description: $description
+      price: $price
     ) {
       id
       title
@@ -78,15 +74,27 @@ const UpdateItem = props => {
     });
   };
 
+  const submitUpdateItem = async e => {
+    e.preventDefault();
+
+    const res = await updateItem({
+      variables: {
+        id: props.id,
+        ...formState
+      }
+    });
+
+    Router.push({
+      pathname: "/item",
+      query: { id: props.id }
+    });
+  };
+
   if (queryLoading) {
     return <div>Loading item...</div>;
   } else {
     return (
-      <Form
-        onSubmit={async e => {
-          e.preventDefault();
-        }}
-      >
+      <Form onSubmit={e => submitUpdateItem(e)}>
         {(mutationError || queryError) && (
           <Error error={mutationError || queryError} />
         )}
@@ -132,7 +140,9 @@ const UpdateItem = props => {
             />
           </label>
 
-          <button type="submit">Submit</button>
+          <button type="submit">
+            Sav{mutationLoading ? "ing" : "e"} Changes
+          </button>
         </fieldset>
       </Form>
     );
