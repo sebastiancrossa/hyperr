@@ -2,9 +2,11 @@
 
 type Mutation {
   createItem(data: CreateItemInput!): Item!
+  updateItem(id: ID!, title: String, description: String, price: Int): Item!
 }
 
 type Query {
+  item(where: ItemWhereUniqueInput!): Item!
   items: [Item]!
 }
 
