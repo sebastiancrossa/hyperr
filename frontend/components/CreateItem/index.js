@@ -60,6 +60,35 @@ const CreateItem = () => {
     });
   };
 
+  const uploadFile = async e => {
+    const files = e.target.files;
+
+    // Getting the uploaded file
+    const data = new FormData();
+    data.append("file", files[0]);
+    data.append("upload_preset", "hyperrr");
+
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/kisana/image/upload",
+      {
+        method: "POST",
+        body: data
+      }
+    );
+
+    // Parsing the response we get into JSON
+    const file = await res.json();
+
+    console.log(file);
+
+    // Setting our new images to our local state
+    setFormState({
+      ...formState,
+      image: file.secure_url,
+      largeImage: file.eager[0].secure_url
+    });
+  };
+
   return (
     <Form
       onSubmit={async e => {
@@ -81,6 +110,18 @@ const CreateItem = () => {
     >
       {error && <Error error={error} />}
       <fieldset disabled={loading} aria-busy={loading}>
+        <label htmlFor="file">
+          Image
+          <input
+            type="file"
+            id="file"
+            name="file"
+            placeholder="Upload an image"
+            onChange={e => uploadFile(e)}
+            required
+          />
+        </label>
+
         <label htmlFor="title">
           Title
           <input

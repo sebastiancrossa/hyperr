@@ -1,3 +1,3 @@
 # Hyperr
 
-An online hypebeast store. Built with React, Yoga, Grapqhl and Prisma.
+An online hypebeast store. Built with React, Apollo, Yoga and Prisma.
