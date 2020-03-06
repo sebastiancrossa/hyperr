@@ -44,8 +44,8 @@ const CreateItem = () => {
   const [formState, setFormState] = useState({
     title: "Sample ",
     description: "Sample item",
-    image: "sample.jpg",
-    largeImage: "large-sample.jpg",
+    image: "",
+    largeImage: "",
     price: 100
   });
 
@@ -120,6 +120,9 @@ const CreateItem = () => {
             onChange={e => uploadFile(e)}
             required
           />
+          {formState.image && (
+            <img width="200" src={formState.image} alt="Image preview" />
+          )}
         </label>
 
         <label htmlFor="title">

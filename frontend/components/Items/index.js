@@ -30,8 +30,6 @@ const Items = () => {
   } else {
     return (
       <Background>
-        <p>These are the item names:</p>
-
         <ItemsList>
           {data.items.map(item => (
             <Item key={item.id} item={item} />
