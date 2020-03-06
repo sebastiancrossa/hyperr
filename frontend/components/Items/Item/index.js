@@ -7,6 +7,7 @@ import formatMoney from "../../../lib/formatMoney";
 import Title from "../../styles/Title";
 import ItemStyles from "../../styles/ItemStyles";
 import PriceTag from "../../styles/PriceTag";
+import DeleteItem from "./DeleteItem";
 
 const Item = ({ item }) => {
   return (
@@ -35,7 +36,7 @@ const Item = ({ item }) => {
         </Link>
 
         <button>Add to cart</button>
-        <button>Delete</button>
+        <DeleteItem toDelete={item.id}>Delete</DeleteItem>
       </div>
     </ItemStyles>
   );
