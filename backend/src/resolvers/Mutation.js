@@ -32,7 +32,7 @@ const Mutations = {
     const where = { id: args.id };
 
     // Getting the item from our db
-    const item = await ctx.db.query.item({ where }, `{id, title}`);
+    const item = await ctx.db.query.item({ where }, `{id title}`);
 
     // Check if the logged user owns the item / has permission to delete it
     // TODO add custom logic
