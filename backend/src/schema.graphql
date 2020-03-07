@@ -3,11 +3,13 @@
 type Mutation {
   createItem(data: CreateItemInput!): Item!
   updateItem(id: ID!, title: String, description: String, price: Int): Item!
+  deleteItem(id: ID!): Item!
 }
 
 type Query {
   item(where: ItemWhereUniqueInput!): Item!
   items: [Item]!
+  itemsConnection(where: ItemWhereInput): ItemConnection!
 }
 
 # --- Inputs --- #

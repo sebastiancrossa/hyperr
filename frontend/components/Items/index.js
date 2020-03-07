@@ -4,6 +4,9 @@ import { useQuery } from "@apollo/react-hooks";
 
 import gql from "graphql-tag";
 
+// Component Imports
+import Pagination from "../Pagination";
+
 // Style
 import { Background, ItemsList } from "./items.styled";
 import Item from "./Item";
@@ -22,7 +25,7 @@ const ALL_ITEMS_QUERY = gql`
   }
 `;
 
-const Items = () => {
+const Items = ({ page }) => {
   const { loading, data } = useQuery(ALL_ITEMS_QUERY);
 
   if (loading) {
@@ -30,11 +33,13 @@ const Items = () => {
   } else {
     return (
       <Background>
+        <Pagination page={page} />
         <ItemsList>
           {data.items.map(item => (
             <Item key={item.id} item={item} />
           ))}
         </ItemsList>
+        <Pagination page={page} />
       </Background>
     );
   }
