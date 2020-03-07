@@ -1,8 +1,8 @@
 // Libraries
 import React from "react";
 import { useQuery } from "@apollo/react-hooks";
-
 import gql from "graphql-tag";
+import { perPage } from "../../config";
 
 // Component Imports
 import Pagination from "../Pagination";
@@ -13,8 +13,8 @@ import Item from "./Item";
 
 // -- QUERIES -- //
 const ALL_ITEMS_QUERY = gql`
-  query ALL_ITEMS_QUERY {
-    items {
+  query ALL_ITEMS_QUERY ($skip: Int = 0, $first: Int = ${perPage}) {
+    items(first: $first, skip: $skip, orderBy: createdAt_DESC) {
       id
       title
       description
@@ -26,7 +26,11 @@ const ALL_ITEMS_QUERY = gql`
 `;
 
 const Items = ({ page }) => {
-  const { loading, data } = useQuery(ALL_ITEMS_QUERY);
+  const { loading, data } = useQuery(ALL_ITEMS_QUERY, {
+    variables: {
+      skip: page * perPage - perPage
+    }
+  });
 
   if (loading) {
     return <div>Loading items...</div>;
