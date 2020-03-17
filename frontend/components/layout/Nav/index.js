@@ -4,9 +4,22 @@ import Link from "next/link";
 // Styles
 import NavStyles from "../../styles/NavStyles";
 
+// Component Imports
+import User from "../../User";
+
 const Nav = () => {
   return (
     <NavStyles>
+      <User>
+        {data => {
+          if (data) {
+            return <p>{data.name}</p>;
+          } else {
+            return null;
+          }
+        }}
+      </User>
+
       <Link href="/items">
         <a>Shop</a>
       </Link>

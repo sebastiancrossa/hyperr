@@ -47,6 +47,11 @@ export default createGlobalStyle`
         line-height: 2;
     }
 
+    a,
+    button {
+        cursor: pointer !important;
+    }
+
     a, 
     input, 
     textarea,
