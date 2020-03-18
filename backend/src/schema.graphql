@@ -10,6 +10,8 @@ type Mutation {
   signUp(name: String!, email: String!, password: String!): User! # REMINDER: type User isn't on this file, but we have the import line at the top of the file, which includes the needed type
   signIn(email: String!, password: String!): User!
   signOut: SuccessMessage
+  requestReset(email: String!): SuccessMessage
+  resetPassword(resetToken: String!, password: String!): User!
 }
 
 type Query {
@@ -22,6 +24,14 @@ type Query {
   ): [Item]!
   itemsConnection(where: ItemWhereInput): ItemConnection!
   me: User
+}
+
+# Redefining our user schema so we can limit what the front end can access
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  permissions: [Permission!]!
 }
 
 # --- Inputs --- #
