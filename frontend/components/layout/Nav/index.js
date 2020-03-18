@@ -13,7 +13,11 @@ const Nav = () => {
       <User>
         {data => {
           if (data) {
-            return <p>{data.name}</p>;
+            return (
+              <Link href="/items">
+                <a>{data.name}</a>
+              </Link>
+            );
           } else {
             return null;
           }
