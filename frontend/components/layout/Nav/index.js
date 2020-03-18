@@ -6,6 +6,7 @@ import NavStyles from "../../styles/NavStyles";
 
 // Component Imports
 import User from "../../User";
+import SignoutButton from "../../Signout";
 
 const Nav = () => {
   return (
@@ -27,8 +28,10 @@ const Nav = () => {
               </Link>
 
               <Link href="/me">
-                <a>{data.me}</a>
+                <a>{data.name}</a>
               </Link>
+
+              <SignoutButton />
             </>
           ) : (
             <>

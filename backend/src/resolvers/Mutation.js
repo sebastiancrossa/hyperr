@@ -99,6 +99,11 @@ const Mutations = {
     });
 
     return user;
+  },
+  signOut(parent, args, ctx, info) {
+    ctx.response.clearCookie("token"); // We are able to access this method because of our cookieParser library
+
+    return { message: "User signout succesful" };
   }
 };
 
