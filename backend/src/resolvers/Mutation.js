@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util"); // Lets us change callback-based functions into promise-based functions
 
+const { transport, createEmail } = require("../mail");
+
 const Mutations = {
   async createItem(parent, args, ctx, info) {
     // TODO Check if the user is logged in
@@ -132,11 +134,19 @@ const Mutations = {
       }
     });
 
+    // Sending the actual email to the user
+    const mailRes = await transport.sendMail({
+      from: "crossasebastian@gmail.com",
+      to: user.email,
+      subject: "Your Password Reset Token",
+      html: createEmail(
+        `<a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">Click here to reset your password</a>`
+      )
+    });
+
     return { message: "Reset token sent succesfully" };
   },
   async resetPassword(parent, args, ctx, info) {
-    // TODO: Check if both passwords match on the frontend
-
     // Checking if the reset token exists and if it has not expired
     const [user] = await ctx.db.query.users({
       where: {
