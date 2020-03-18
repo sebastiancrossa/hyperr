@@ -79,8 +79,6 @@ const CreateItem = () => {
     // Parsing the response we get into JSON
     const file = await res.json();
 
-    console.log(file);
-
     // Setting our new images to our local state
     setFormState({
       ...formState,
