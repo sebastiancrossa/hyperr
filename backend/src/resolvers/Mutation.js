@@ -132,8 +132,6 @@ const Mutations = {
       }
     });
 
-    console.log(res);
-
     return { message: "Reset token sent succesfully" };
   },
   async resetPassword(parent, args, ctx, info) {

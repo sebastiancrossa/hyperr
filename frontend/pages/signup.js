@@ -4,12 +4,14 @@ import styled from "styled-components";
 // Component Imports
 import SignupForm from "../components/Signup";
 import SigninForm from "../components/Signin";
+import RequestResetForm from "../components/RequestReset";
 
 const Signup = () => {
   return (
     <Columns>
       <SignupForm />
       <SigninForm />
+      <RequestResetForm />
     </Columns>
   );
 };
