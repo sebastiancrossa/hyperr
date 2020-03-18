@@ -7,6 +7,8 @@ import gql from "graphql-tag";
 import Form from "../styles/Form";
 import Error from "../ErrorMessage";
 
+import { CURRENT_USER_QUERY } from "../User";
+
 // --- GraphQL --- //
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -19,7 +21,13 @@ const SIGNIN_MUTATION = gql`
 // --- --- //
 
 const Signin = () => {
-  const [signIn, { data, loading, error }] = useMutation(SIGNIN_MUTATION);
+  const [signIn, { data, loading, error }] = useMutation(SIGNIN_MUTATION, {
+    refetchQueries: [
+      {
+        query: CURRENT_USER_QUERY
+      }
+    ]
+  });
 
   const [formState, setFormState] = useState({
     email: "",
