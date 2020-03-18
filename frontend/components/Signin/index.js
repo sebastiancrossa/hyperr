@@ -10,24 +10,19 @@ import Error from "../ErrorMessage";
 import { CURRENT_USER_QUERY } from "../User";
 
 // --- GraphQL --- //
-const SIGNUP_MUTATION = gql`
-  mutation SIGNUP_MUTATION(
-    $name: String!
-    $email: String!
-    $password: String!
-  ) {
-    signUp(name: $name, email: $email, password: $password) {
+const SIGNIN_MUTATION = gql`
+  mutation SIGNIN_MUTATION($email: String!, $password: String!) {
+    signIn(email: $email, password: $password) {
       id
       email
-      name
     }
   }
 `;
 // --- --- //
 
-const Signup = () => {
-  const [signUp, { data, loading, error }] = useMutation(SIGNUP_MUTATION, {
-    refetchQueriess: [
+const Signin = () => {
+  const [signIn, { data, loading, error }] = useMutation(SIGNIN_MUTATION, {
+    refetchQueries: [
       {
         query: CURRENT_USER_QUERY
       }
@@ -35,7 +30,6 @@ const Signup = () => {
   });
 
   const [formState, setFormState] = useState({
-    name: "",
     email: "",
     password: ""
   });
@@ -55,30 +49,17 @@ const Signup = () => {
       onSubmit={async e => {
         e.preventDefault();
 
-        // Calling our signup mutation
-        const res = await signUp({
+        // Calling our sign in mutation
+        const res = await signIn({
           variables: {
             ...formState
           }
         });
-
-        console.log(res);
       }}
     >
       {error && <Error error={error} />}
       <fieldset disabled={loading} aria-busy={loading}>
-        <h1>Create an account</h1>
-
-        <label htmlFor="name">
-          Name
-          <input
-            type="text"
-            name="name"
-            placeholder="Name..."
-            value={formState.name}
-            onChange={e => handleChange(e)}
-          />
-        </label>
+        <h1>Sign In</h1>
 
         <label htmlFor="email">
           Email
@@ -102,10 +83,10 @@ const Signup = () => {
           />
         </label>
 
-        <button type="submit">Create account</button>
+        <button type="submit">Sign In</button>
       </fieldset>
     </Form>
   );
 };
 
-export default Signup;
+export default Signin;

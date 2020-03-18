@@ -1,13 +1,15 @@
+// Libraries
+import styled from "styled-components";
+
 // Component Imports
 import SignupForm from "../components/Signup";
-import styled from "styled-components";
+import SigninForm from "../components/Signin";
 
 const Signup = () => {
   return (
     <Columns>
       <SignupForm />
-      <SignupForm />
-      <SignupForm />
+      <SigninForm />
     </Columns>
   );
 };

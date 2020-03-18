@@ -5,6 +5,7 @@ type Mutation {
   updateItem(id: ID!, title: String, description: String, price: Int): Item!
   deleteItem(id: ID!): Item!
   signUp(name: String!, email: String!, password: String!): User! # REMINDER: type User isn't on this file, but we have the import line at the top of the file, which includes the needed type
+  signIn(email: String!, password: String!): User!
 }
 
 type Query {
@@ -16,6 +17,7 @@ type Query {
     first: Int
   ): [Item]!
   itemsConnection(where: ItemWhereInput): ItemConnection!
+  me: User
 }
 
 # --- Inputs --- #

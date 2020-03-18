@@ -73,6 +73,32 @@ const Mutations = {
 
     // Returing the user to the browser
     return user;
+  },
+  async signIn(parent, { email, password }, ctx, info) {
+    // Checking if there is an existing user with the passed email
+    const user = await ctx.db.query.user({
+      where: {
+        email
+      }
+    });
+    // ---
+
+    const isValid = await bcrypt.compare(password, user.password);
+
+    // Checking if the password matches to the users password (or if the user entered does not exist)
+    if (!user || !isValid) {
+      throw new Error(`Incorrect password for ${email}`); // Will be caught by our query call and will be displayed to the user
+    }
+    // ---
+
+    const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+
+    ctx.response.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 365
+    });
+
+    return user;
   }
 };
 

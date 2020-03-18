@@ -4,29 +4,42 @@ import Link from "next/link";
 // Styles
 import NavStyles from "../../styles/NavStyles";
 
+// Component Imports
+import User from "../../User";
+
 const Nav = () => {
   return (
-    <NavStyles>
-      <Link href="/items">
-        <a>Shop</a>
-      </Link>
+    <User>
+      {data => (
+        <NavStyles>
+          <Link href="/items">
+            <a>Shop</a>
+          </Link>
 
-      <Link href="/sell">
-        <a>Sell</a>
-      </Link>
+          {data ? (
+            <>
+              <Link href="/sell">
+                <a>Sell</a>
+              </Link>
 
-      <Link href="/orders">
-        <a>Orders</a>
-      </Link>
+              <Link href="/orders">
+                <a>Orders</a>
+              </Link>
 
-      <Link href="/signup">
-        <a>Signup</a>
-      </Link>
-
-      <Link href="/me">
-        <a>Account</a>
-      </Link>
-    </NavStyles>
+              <Link href="/me">
+                <a>{data.me}</a>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/signup">
+                <a>Sign In</a>
+              </Link>
+            </>
+          )}
+        </NavStyles>
+      )}
+    </User>
   );
 };
 
