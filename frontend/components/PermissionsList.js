@@ -22,7 +22,7 @@ const ALL_USERS_QUERY = gql`
 `;
 // --- --- //
 
-// TODO: Change code so these permissions arent hard coded and actually retreived from the backend
+// TODO: Change code so these permissions arent hard coded and are actually retreived from the backend
 const possiblePermissions = [
   "ADMIN",
   "USER",
@@ -55,7 +55,7 @@ const PermissionsList = () => {
         </thead>
         <tbody>
           {data.users.map(user => (
-            <UserPermissions user={user} key={user.id} />
+            <UserWithPermissions user={user} key={user.id} />
           ))}
         </tbody>
       </Table>
@@ -64,13 +64,14 @@ const PermissionsList = () => {
 };
 
 // TODO: Probably refactor this part by extracting the code and making a seperate file for it, not really sure if needed though
-const UserPermissions = ({ user }) => {
+// Component that represets the specific table row of a passed user
+const UserWithPermissions = ({ user }) => {
   const [userPermissions, setUserPermissions] = useState(user.permissions); // Using props to seed the initial state of the checboxes
 
   const handlePermissionChange = e => {
     const checkbox = e.target;
 
-    // Creating a copy of our current permissions
+    // Creating a copy of the current permissions of the user from the table row
     let updatedPermissions = [...userPermissions];
 
     if (checkbox.checked) {
@@ -93,6 +94,7 @@ const UserPermissions = ({ user }) => {
         <td key={permission}>
           <label htmlFor={`${user.id}-permission-${permission}`}>
             <input
+              id={`${user.id}-permission-${permission}`}
               type="checkbox"
               checked={userPermissions.includes(permission)}
               value={permission}
@@ -109,7 +111,7 @@ const UserPermissions = ({ user }) => {
   );
 };
 
-UserPermissions.propTypes = {
+UserWithPermissions.propTypes = {
   user: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,
