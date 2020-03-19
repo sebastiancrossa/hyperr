@@ -44,8 +44,6 @@ const UPDATE_ITEM_MUTATION = gql`
 `;
 
 const UpdateItem = props => {
-  const [formState, setFormState] = useState({});
-
   // --- GRAPHQL --- //
   const [
     updateItem,
@@ -62,6 +60,10 @@ const UpdateItem = props => {
     }
   });
   // --- --- //
+
+  const [formState, setFormState] = useState({});
+
+  console.log(formState);
 
   const handleChange = e => {
     const { name, type, value } = e.target;
