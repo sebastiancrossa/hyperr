@@ -33,8 +33,6 @@ const SingleItem = ({ itemId }) => {
   if (error) return <ErrorMessage error={error} />;
   if (!data.item) return <p>No item found for {itemId}</p>;
 
-  console.log(data);
-
   return (
     <Background>
       <Head>

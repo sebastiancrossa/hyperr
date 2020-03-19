@@ -8,37 +8,56 @@ import Title from "../../styles/Title";
 import ItemStyles from "../../styles/ItemStyles";
 import PriceTag from "../../styles/PriceTag";
 import DeleteItem from "./DeleteItem";
+import User from "../../User";
 
 const Item = ({ item }) => {
   return (
-    <ItemStyles>
-      {item.image && <img src={item.image} alt={item.title} />}
-      <Title>
-        <Link
-          href={{
-            pathname: "/item",
-            query: { id: item.id }
-          }}
-        >
-          <a>{item.title}</a>
-        </Link>
-      </Title>
-      <PriceTag>{formatMoney(item.price)}</PriceTag>
-      <p>{item.description}</p>
-      <div className="buttonList">
-        <Link
-          href={{
-            pathname: "/update",
-            query: { id: item.id }
-          }}
-        >
-          <a>Edit ✏️</a>
-        </Link>
+    <User>
+      {data => (
+        <ItemStyles>
+          {item.image && <img src={item.image} alt={item.title} />}
+          <Title>
+            <Link
+              href={{
+                pathname: "/item",
+                query: { id: item.id }
+              }}
+            >
+              <a>{item.title}</a>
+            </Link>
+          </Title>
+          <PriceTag>{formatMoney(item.price)}</PriceTag>
+          <p>{item.description}</p>
 
-        <button>Add to cart</button>
-        <DeleteItem toDelete={item.id}>Delete</DeleteItem>
-      </div>
-    </ItemStyles>
+          <div className="buttonList">
+            {data && (
+              <>
+                {(item.user.id === data.id ||
+                  data.permissions.includes("ADMIN") ||
+                  data.permissions.includes("ITEMUPDATE")) && (
+                  <Link
+                    href={{
+                      pathname: "/update",
+                      query: { id: item.id }
+                    }}
+                  >
+                    <a>Edit ✏️</a>
+                  </Link>
+                )}
+
+                <button>Add to cart</button>
+
+                {(item.user.id === data.id ||
+                  data.permissions.includes("ADMIN") ||
+                  data.permissions.includes("ITEMDELETE")) && (
+                  <DeleteItem toDelete={item.id}>Delete</DeleteItem>
+                )}
+              </>
+            )}
+          </div>
+        </ItemStyles>
+      )}
+    </User>
   );
 };
 

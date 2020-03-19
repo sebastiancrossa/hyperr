@@ -131,8 +131,9 @@ const UserWithPermissions = ({ user }) => {
               }
             });
           }}
+          disabled={loading}
         >
-          Update
+          Updat{loading ? "ing" : "e"}
         </SickButton>
       </td>
     </tr>
