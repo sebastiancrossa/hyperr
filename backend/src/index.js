@@ -13,7 +13,7 @@ server.express.use(cookieParser()); // Lets us inject any middleware to our expr
 
 // Decoding the JWT so we can get the user id from each request
 server.express.use((req, res, next) => {
-  const { token } = req.cookies; // Extracting the token from our cookies
+  const { token } = req.cookies; // Extracting the token from our
 
   if (token) {
     const { userId } = jwt.verify(token, process.env.APP_SECRET);
@@ -21,6 +21,24 @@ server.express.use((req, res, next) => {
     // Adding the user id to the req for future requests to access
     req.userId = userId;
   }
+
+  next();
+});
+
+// Middleware that populates the User object on each request if they are logged in
+server.express.use(async (req, res, next) => {
+  if (!req.userId) return next();
+
+  const user = await db.query.user(
+    {
+      where: {
+        id: req.userId
+      }
+    },
+    "{ id, permissions, email, name }"
+  );
+
+  req.user = user;
 
   next();
 });
