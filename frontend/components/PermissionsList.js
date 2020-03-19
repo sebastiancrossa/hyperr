@@ -1,6 +1,6 @@
 // Libraries
 import { useState } from "react";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import PropTypes from "prop-types";
 
@@ -13,6 +13,20 @@ import SickButton from "./styles/SickButton";
 const ALL_USERS_QUERY = gql`
   query {
     users {
+      id
+      name
+      email
+      permissions
+    }
+  }
+`;
+
+const UPDATE_PERMISSIONS_MUTATION = gql`
+  mutation UPDATE_PERMISSIONS_MUTATION(
+    $permissions: [Permission]
+    $userId: ID!
+  ) {
+    updatePermissions(permissions: $permissions, userId: $userId) {
       id
       name
       email
@@ -67,6 +81,9 @@ const PermissionsList = () => {
 // Component that represets the specific table row of a passed user
 const UserWithPermissions = ({ user }) => {
   const [userPermissions, setUserPermissions] = useState(user.permissions); // Using props to seed the initial state of the checboxes
+  const [updatePermissions, { data, loading, error }] = useMutation(
+    UPDATE_PERMISSIONS_MUTATION
+  );
 
   const handlePermissionChange = e => {
     const checkbox = e.target;
@@ -105,7 +122,18 @@ const UserWithPermissions = ({ user }) => {
       ))}
 
       <td>
-        <SickButton>Update</SickButton>
+        <SickButton
+          onClick={e => {
+            updatePermissions({
+              variables: {
+                permissions: userPermissions,
+                userId: user.id
+              }
+            });
+          }}
+        >
+          Update
+        </SickButton>
       </td>
     </tr>
   );
