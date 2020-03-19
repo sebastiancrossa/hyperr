@@ -1,6 +1,8 @@
 // Libraries
-import { useQuery } from "@apollo/react-hooks";
+import { useState } from "react";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
+import PropTypes from "prop-types";
 
 // Component Imports
 import Error from "./ErrorMessage";
@@ -18,9 +20,23 @@ const ALL_USERS_QUERY = gql`
     }
   }
 `;
+
+const UPDATE_PERMISSIONS_MUTATION = gql`
+  mutation UPDATE_PERMISSIONS_MUTATION(
+    $permissions: [Permission]
+    $userId: ID!
+  ) {
+    updatePermissions(permissions: $permissions, userId: $userId) {
+      id
+      name
+      email
+      permissions
+    }
+  }
+`;
 // --- --- //
 
-// TODO: Change code so these permissions arent hard coded and actually retreived from the backend
+// TODO: Change code so these permissions arent hard coded and are actually retreived from the backend
 const possiblePermissions = [
   "ADMIN",
   "USER",
@@ -36,8 +52,6 @@ const PermissionsList = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <Error error={error} />;
 
-  console.log(data);
-
   return (
     <div>
       <Table>
@@ -47,7 +61,7 @@ const PermissionsList = () => {
             <th>Email</th>
 
             {possiblePermissions.map(permission => (
-              <th>{permission}</th>
+              <th key={permission}>{permission}</th>
             ))}
 
             <th>👇</th>
@@ -55,7 +69,7 @@ const PermissionsList = () => {
         </thead>
         <tbody>
           {data.users.map(user => (
-            <User user={user} />
+            <UserWithPermissions user={user} key={user.id} />
           ))}
         </tbody>
       </Table>
@@ -64,25 +78,74 @@ const PermissionsList = () => {
 };
 
 // TODO: Probably refactor this part by extracting the code and making a seperate file for it, not really sure if needed though
-const User = ({ user }) => {
+// Component that represets the specific table row of a passed user
+const UserWithPermissions = ({ user }) => {
+  const [userPermissions, setUserPermissions] = useState(user.permissions); // Using props to seed the initial state of the checboxes
+  const [updatePermissions, { data, loading, error }] = useMutation(
+    UPDATE_PERMISSIONS_MUTATION
+  );
+
+  const handlePermissionChange = e => {
+    const checkbox = e.target;
+
+    // Creating a copy of the current permissions of the user from the table row
+    let updatedPermissions = [...userPermissions];
+
+    if (checkbox.checked) {
+      updatedPermissions.push(checkbox.value);
+    } else {
+      updatedPermissions = updatedPermissions.filter(
+        permission => permission !== checkbox.value
+      );
+    }
+
+    setUserPermissions(updatedPermissions);
+  };
+
   return (
     <tr>
       <td>{user.name}</td>
       <td>{user.email}</td>
 
       {possiblePermissions.map(permission => (
-        <td>
+        <td key={permission}>
           <label htmlFor={`${user.id}-permission-${permission}`}>
-            <input type="checkbox" />
+            <input
+              id={`${user.id}-permission-${permission}`}
+              type="checkbox"
+              checked={userPermissions.includes(permission)}
+              value={permission}
+              onChange={e => handlePermissionChange(e)}
+            />
           </label>
         </td>
       ))}
 
       <td>
-        <SickButton>Update</SickButton>
+        <SickButton
+          onClick={e => {
+            updatePermissions({
+              variables: {
+                permissions: userPermissions,
+                userId: user.id
+              }
+            });
+          }}
+        >
+          Update
+        </SickButton>
       </td>
     </tr>
   );
+};
+
+UserWithPermissions.propTypes = {
+  user: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+    id: PropTypes.string,
+    permissions: PropTypes.array
+  }).isRequired
 };
 
 export default PermissionsList;

@@ -5,6 +5,7 @@ const { randomBytes } = require("crypto");
 const { promisify } = require("util"); // Lets us change callback-based functions into promise-based functions
 
 const { transport, createEmail } = require("../mail");
+const { hasPermission } = require("../utils");
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
@@ -190,6 +191,37 @@ const Mutations = {
     });
 
     return updatedUser;
+  },
+  async updatePermissions(parent, args, ctx, info) {
+    if (!ctx.request.userId) throw new Error("You must be logged in");
+
+    const currentUser = await ctx.db.query.user(
+      {
+        where: {
+          id: ctx.request.userId
+        }
+      },
+      info
+    );
+
+    // Check if the user has the correct permissions
+    // Will throw an error if the user doesnt have the permissions
+    hasPermission(currentUser, ["ADMIN", "PERMISSIONUPDATE"]);
+
+    // Updating the permissions
+    return ctx.db.mutation.updateUser(
+      {
+        where: {
+          id: args.userId
+        },
+        data: {
+          permissions: {
+            set: args.permissions // using set since the permissions are enums
+          }
+        }
+      },
+      info
+    );
   }
 };
 

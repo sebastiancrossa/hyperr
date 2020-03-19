@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/sebastian-crossa-1382fb/Hyperr/dev
-# timestamp: Wed Mar 18 2020 19:36:28 GMT-0700 (Mexican Pacific Standard Time)
+# timestamp: Thu Mar 19 2020 01:28:57 GMT-0700 (Mexican Pacific Standard Time)
 
 type AggregateItem {
   count: Int!
@@ -477,7 +477,8 @@ enum Permission {
   ADMIN
   USER
   ITEMCREATE
-  ITEMPUPDATE
+  ITEMUPDATE
+  ITEMDELETE
   PERMISSIONUPDATE
 }
 
