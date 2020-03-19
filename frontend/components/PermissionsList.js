@@ -1,6 +1,8 @@
 // Libraries
+import { useState } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
+import PropTypes from "prop-types";
 
 // Component Imports
 import Error from "./ErrorMessage";
@@ -36,8 +38,6 @@ const PermissionsList = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <Error error={error} />;
 
-  console.log(data);
-
   return (
     <div>
       <Table>
@@ -47,7 +47,7 @@ const PermissionsList = () => {
             <th>Email</th>
 
             {possiblePermissions.map(permission => (
-              <th>{permission}</th>
+              <th key={permission}>{permission}</th>
             ))}
 
             <th>👇</th>
@@ -55,7 +55,7 @@ const PermissionsList = () => {
         </thead>
         <tbody>
           {data.users.map(user => (
-            <User user={user} />
+            <UserPermissions user={user} key={user.id} />
           ))}
         </tbody>
       </Table>
@@ -64,16 +64,40 @@ const PermissionsList = () => {
 };
 
 // TODO: Probably refactor this part by extracting the code and making a seperate file for it, not really sure if needed though
-const User = ({ user }) => {
+const UserPermissions = ({ user }) => {
+  const [userPermissions, setUserPermissions] = useState(user.permissions); // Using props to seed the initial state of the checboxes
+
+  const handlePermissionChange = e => {
+    const checkbox = e.target;
+
+    // Creating a copy of our current permissions
+    let updatedPermissions = [...userPermissions];
+
+    if (checkbox.checked) {
+      updatedPermissions.push(checkbox.value);
+    } else {
+      updatedPermissions = updatedPermissions.filter(
+        permission => permission !== checkbox.value
+      );
+    }
+
+    setUserPermissions(updatedPermissions);
+  };
+
   return (
     <tr>
       <td>{user.name}</td>
       <td>{user.email}</td>
 
       {possiblePermissions.map(permission => (
-        <td>
+        <td key={permission}>
           <label htmlFor={`${user.id}-permission-${permission}`}>
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={userPermissions.includes(permission)}
+              value={permission}
+              onChange={e => handlePermissionChange(e)}
+            />
           </label>
         </td>
       ))}
@@ -83,6 +107,15 @@ const User = ({ user }) => {
       </td>
     </tr>
   );
+};
+
+UserPermissions.propTypes = {
+  user: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+    id: PropTypes.string,
+    permissions: PropTypes.array
+  }).isRequired
 };
 
 export default PermissionsList;

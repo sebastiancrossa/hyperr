@@ -26,7 +26,7 @@ const User = ({ children }) => {
   return <>{children(data.me)}</>;
 };
 
-User.PropTypes = {
+User.propTypes = {
   children: PropTypes.func.isRequired
 };
 
