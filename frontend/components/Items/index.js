@@ -21,6 +21,9 @@ const ALL_ITEMS_QUERY = gql`
       price
       image
       largeImage
+      user {
+        id
+      }
     }
   }
 `;
