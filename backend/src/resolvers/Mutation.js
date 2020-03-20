@@ -270,6 +270,34 @@ const Mutations = {
       },
       info
     );
+  },
+  async removeFromCart(parent, args, ctx, info) {
+    // Get the specific cart item the user wants to delete
+    const cartItem = await ctx.db.query.cartItem(
+      {
+        where: {
+          id: args.id
+        }
+      },
+      `{id, user { id }}`
+    );
+
+    if (!cartItem)
+      throw new Error(
+        "No cart item found. The item you are trying to delete has probably been deleted"
+      );
+
+    // Check if the current signed in user owns the cart item
+    if (ctx.request.userId !== cartItem.user.id)
+      throw new Error("The item you are trying to delete is not yours");
+
+    // Actually delete the item from the cart
+    return await ctx.db.mutation.deleteCartItem(
+      {
+        where: { id: args.id }
+      },
+      info
+    );
   }
 };
 

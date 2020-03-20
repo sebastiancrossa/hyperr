@@ -3,6 +3,9 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import formatMoney from "../lib/formatMoney";
 
+// Component Imports
+import RemoveFromCart from "./RemoveFromCart";
+
 const CartItem = ({ cartItem }) => {
   return (
     <CartItemStyles>
@@ -12,6 +15,8 @@ const CartItem = ({ cartItem }) => {
         {formatMoney(cartItem.item.price * cartItem.quantity)} |{" "}
         {cartItem.quantity} &times; {formatMoney(cartItem.item.price)} each
       </p>
+
+      <RemoveFromCart id={cartItem.id} />
     </CartItemStyles>
   );
 };
