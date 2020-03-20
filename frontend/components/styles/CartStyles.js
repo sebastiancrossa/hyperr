@@ -20,13 +20,13 @@ const CartStyles = styled.div`
   ${props => props.open && `transform: translateX(0);`};
 
   header {
-    border-bottom: 5px solid ${props => props.theme.black};
+    border-bottom: 5px solid black;
     margin-bottom: 2rem;
     padding-bottom: 2rem;
   }
 
   footer {
-    border-top: 10px double ${props => props.theme.black};
+    border-top: 10px double black;
     margin-top: 2rem;
     padding-top: 2rem;
     display: grid;

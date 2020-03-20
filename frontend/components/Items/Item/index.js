@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import formatMoney from "../../../lib/formatMoney";
 
 // Component Imports
+import AddToCart from "../../AddToCart";
 import Title from "../../styles/Title";
 import ItemStyles from "../../styles/ItemStyles";
 import PriceTag from "../../styles/PriceTag";
@@ -45,7 +46,7 @@ const Item = ({ item }) => {
                   </Link>
                 )}
 
-                <button>Add to cart</button>
+                <AddToCart id={item.id} />
 
                 {(item.user.id === data.id ||
                   data.permissions.includes("ADMIN") ||

@@ -222,6 +222,56 @@ const Mutations = {
       },
       info
     );
+  },
+  async addToCart(parent, args, ctx, info) {
+    const { userId } = ctx.request;
+    const itemId = args.id;
+
+    if (!userId)
+      throw new Error("You must be logged in to add this item to your cart");
+
+    // Query the current users cart with items
+    /* 
+      We are sure that there will only be 1 item in https://helpwithcovid.com/projects/13the returned array since there won't be an item
+      that has the exact same id and the exact same user
+    */
+    const [existingCartItem] = await ctx.db.query.cartItems({
+      where: {
+        user: { id: userId },
+        item: { id: itemId }
+      }
+    });
+
+    console.log(existingCartItem);
+
+    // Check if the item they are trying to add is already in their cart
+    if (existingCartItem) {
+      console.log("Item already in their cart");
+
+      // Incrementing the item quantity by 1
+      return ctx.db.mutation.updateCartItem(
+        {
+          where: { id: existingCartItem.id },
+          data: { quantity: existingCartItem.quantity + 1 }
+        },
+        info
+      );
+    }
+
+    // If it isn't, create a new cart item
+    return await ctx.db.mutation.createCartItem(
+      {
+        data: {
+          user: {
+            connect: { id: userId }
+          },
+          item: {
+            connect: { id: itemId }
+          }
+        }
+      },
+      info
+    );
   }
 };
 
