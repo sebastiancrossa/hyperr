@@ -1,5 +1,7 @@
 // Libraries
 import Link from "next/link";
+import { useMutation } from "@apollo/react-hooks";
+import { TOGGLE_CART_MUTATION } from "../../Cart";
 
 // Styles
 import NavStyles from "../../styles/NavStyles";
@@ -9,6 +11,10 @@ import User from "../../User";
 import SignoutButton from "../../Signout";
 
 const Nav = () => {
+  const [toggleCart, { data, loading }] = useMutation(TOGGLE_CART_MUTATION);
+
+  if (loading) return null;
+
   return (
     <User>
       {data => (
@@ -31,6 +37,7 @@ const Nav = () => {
                 <a>{data.name}</a>
               </Link>
 
+              <button onClick={toggleCart}>My Cart</button>
               <SignoutButton />
             </>
           ) : (

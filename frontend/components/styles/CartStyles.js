@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const CartStyles = styled.div`
   padding: 20px;
@@ -18,11 +18,13 @@ const CartStyles = styled.div`
   display: grid;
   grid-template-rows: auto 1fr auto;
   ${props => props.open && `transform: translateX(0);`};
+
   header {
     border-bottom: 5px solid ${props => props.theme.black};
     margin-bottom: 2rem;
     padding-bottom: 2rem;
   }
+
   footer {
     border-top: 10px double ${props => props.theme.black};
     margin-top: 2rem;
@@ -32,10 +34,12 @@ const CartStyles = styled.div`
     align-items: center;
     font-size: 3rem;
     font-weight: 900;
+
     p {
       margin: 0;
     }
   }
+
   ul {
     margin: 0;
     padding: 0;
