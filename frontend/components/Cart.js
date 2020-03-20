@@ -1,8 +1,13 @@
 // Libraries
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
+import calcTotalPrice from "../lib/calcTotalPrice";
+import formatMoney from "../lib/formatMoney";
 
 // Component Imports
+import User from "./User";
+import CartItem from "./CartItem";
+
 import CartStyles from "./styles/CartStyles";
 import Supreme from "./styles/Supreme";
 import CloseButton from "./styles/CloseButton";
@@ -32,20 +37,35 @@ const Cart = () => {
   if (loading || mutationLoading) return null;
 
   return (
-    <CartStyles open={data.cartOpen}>
-      <header>
-        <CloseButton title="close" onClick={toggleCart}>
-          &times;
-        </CloseButton>
-        <Supreme>Your Cart</Supreme>
-        <p>You have ___ items in your cart</p>
-      </header>
+    <User>
+      {userData => (
+        <CartStyles open={data.cartOpen}>
+          <header>
+            <CloseButton title="close" onClick={toggleCart}>
+              &times;
+            </CloseButton>
+            <Supreme>Your Cart</Supreme>
+            <p>
+              You have {userData.cart.length} item
+              {userData.cart.length === 1 ? "" : "s"} in your cart
+            </p>
+          </header>
 
-      <footer>
-        <p>$10.10</p>
-        <SickButton>Checkout</SickButton>
-      </footer>
-    </CartStyles>
+          {console.log(userData.cart)}
+
+          <ul>
+            {userData.cart.map(cartItem => (
+              <CartItem id={cartItem.id} cartItem={cartItem} />
+            ))}
+          </ul>
+
+          <footer>
+            <p>{formatMoney(calcTotalPrice(userData.cart))}</p>
+            <SickButton>Checkout</SickButton>
+          </footer>
+        </CartStyles>
+      )}
+    </User>
   );
 };
 

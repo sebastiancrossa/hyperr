@@ -36,6 +36,10 @@ const Item = styled.div`
       font-size: 1rem;
       padding: 1rem;
     }
+
+    button:disabled {
+      color: var(--color-gray);
+    }
   }
 `;
 
