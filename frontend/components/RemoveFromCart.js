@@ -22,6 +22,37 @@ const RemoveFromCart = ({ id }) => {
     {
       variables: {
         id
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        removeFromCart: {
+          __typename: "CartItem",
+          id
+        }
+      },
+      // Gets called as soon as we get a response back from the server after a mutation has been performed
+      // cache - apollo cache, payload - dump of information we get back from the server
+      update: (cache, payload) => {
+        console.log("Running remove from cart update function");
+
+        // Reading the cache
+        const data = cache.readQuery({
+          query: CURRENT_USER_QUERY
+        });
+
+        // Removing the item from the cart
+        const cartItemId = payload.data.removeFromCart.id; // Getting the id of the item we are trying to delete
+        const updatedData = data.me.cart.filter(
+          cartItem => cartItem.id !== cartItemId
+        );
+
+        console.log(data);
+
+        // Writing back to the cache with the updated cart
+        cache.writeQuery({
+          query: CURRENT_USER_QUERY,
+          data: updatedData
+        });
       }
     }
   );

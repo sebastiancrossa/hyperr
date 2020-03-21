@@ -38,33 +38,33 @@ const Cart = () => {
 
   return (
     <User>
-      {userData => (
-        <CartStyles open={data.cartOpen}>
-          <header>
-            <CloseButton title="close" onClick={toggleCart}>
-              &times;
-            </CloseButton>
-            <Supreme>Your Cart</Supreme>
-            <p>
-              You have {userData.cart.length} item
-              {userData.cart.length === 1 ? "" : "s"} in your cart
-            </p>
-          </header>
+      {userData =>
+        userData && (
+          <CartStyles open={data.cartOpen}>
+            <header>
+              <CloseButton title="close" onClick={toggleCart}>
+                &times;
+              </CloseButton>
+              <Supreme>Your Cart</Supreme>
+              <p>
+                You have {userData.cart.length} item
+                {userData.cart.length === 1 ? "" : "s"} in your cart
+              </p>
+            </header>
 
-          {console.log(userData.cart)}
+            <ul>
+              {userData.cart.map(cartItem => (
+                <CartItem id={cartItem.id} cartItem={cartItem} />
+              ))}
+            </ul>
 
-          <ul>
-            {userData.cart.map(cartItem => (
-              <CartItem id={cartItem.id} cartItem={cartItem} />
-            ))}
-          </ul>
-
-          <footer>
-            <p>{formatMoney(calcTotalPrice(userData.cart))}</p>
-            <SickButton>Checkout</SickButton>
-          </footer>
-        </CartStyles>
-      )}
+            <footer>
+              <p>{formatMoney(calcTotalPrice(userData.cart))}</p>
+              <SickButton>Checkout</SickButton>
+            </footer>
+          </CartStyles>
+        )
+      }
     </User>
   );
 };
