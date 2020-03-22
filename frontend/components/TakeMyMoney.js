@@ -16,10 +16,41 @@ const totalItems = cart => {
   return cart.reduce((tally, cartItem) => tally + cartItem.quantity, 0);
 };
 
+// --- GRAPHQL --- //
+const CREATE_ORDER_MUTATION = gql`
+  mutation CREATE_ORDER_MUTATION($token: String!) {
+    createOrder(token: $token) {
+      id
+      charge
+      total
+      items {
+        id
+        title
+      }
+    }
+  }
+`;
+// --- --- //
+
 const TakeMyMoney = ({ children }) => {
+  const [createOrder, { data, loading, error }] = useMutation(
+    CREATE_ORDER_MUTATION,
+    {
+      refetchQueries: [{ query: CURRENT_USER_QUERY }]
+    }
+  );
+
   const onToken = res => {
-    console.log(res);
+    createOrder({
+      variables: {
+        token: res.id
+      }
+    }).catch(err => {
+      alert(err.message);
+    });
   };
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <User>

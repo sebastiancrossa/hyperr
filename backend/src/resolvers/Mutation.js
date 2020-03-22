@@ -1,6 +1,7 @@
 // Libraries
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const stripe = require("../stripe");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util"); // Lets us change callback-based functions into promise-based functions
 
@@ -298,6 +299,36 @@ const Mutations = {
       },
       info
     );
+  },
+  async createOrder(parent, { token }, ctx, info) {
+    const { userId } = ctx.request;
+
+    if (!userId) throw new Error("You need to be logged in");
+
+    // Querying the current logged in user
+    const user = await ctx.db.query.user(
+      {
+        where: {
+          id: userId
+        }
+      },
+      `{ id name email cart { id quantity item { title price id description image } } }`
+    );
+
+    // Recalculating the total price on the server side - this is to prevent any type ofclient manipulation on the client side
+    const amount = user.cart.reduce(
+      (tally, cartItem) => tally + cartItem.item.price * cartItem.quantity,
+      0
+    );
+
+    console.log(`Charging for a total of ${amount}`);
+
+    // Creating an actual stripe charge
+    const charge = await stripe.charges.create({
+      amount,
+      currency: "USD",
+      source: token
+    });
   }
 };
 
