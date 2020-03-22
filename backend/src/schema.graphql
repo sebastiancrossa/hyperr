@@ -30,9 +30,10 @@ type Query {
   users: [User]!
   me: User
   order(id: ID!): Order
+  orders: [Order]!
 }
 
-# Redefining our user schema so we can limit what the front end can access
+# Redefining our user schema so we   limit what the front end can access
 type User {
   id: ID!
   name: String!
