@@ -222,6 +222,82 @@ const Mutations = {
       },
       info
     );
+  },
+  async addToCart(parent, args, ctx, info) {
+    const { userId } = ctx.request;
+    const itemId = args.id;
+
+    if (!userId)
+      throw new Error("You must be logged in to add this item to your cart");
+
+    // Query the current users cart with items
+    /* 
+      We are sure that there will only be 1 item in https://helpwithcovid.com/projects/13the returned array since there won't be an item
+      that has the exact same id and the exact same user
+    */
+    const [existingCartItem] = await ctx.db.query.cartItems({
+      where: {
+        user: { id: userId },
+        item: { id: itemId }
+      }
+    });
+
+    console.log(existingCartItem);
+
+    // Check if the item they are trying to add is already in their cart
+    if (existingCartItem) {
+      // Incrementing the item quantity by 1
+      return ctx.db.mutation.updateCartItem(
+        {
+          where: { id: existingCartItem.id },
+          data: { quantity: existingCartItem.quantity + 1 }
+        },
+        info
+      );
+    }
+
+    // If it isn't, create a new cart item
+    return await ctx.db.mutation.createCartItem(
+      {
+        data: {
+          user: {
+            connect: { id: userId }
+          },
+          item: {
+            connect: { id: itemId }
+          }
+        }
+      },
+      info
+    );
+  },
+  async removeFromCart(parent, args, ctx, info) {
+    // Get the specific cart item the user wants to delete
+    const cartItem = await ctx.db.query.cartItem(
+      {
+        where: {
+          id: args.id
+        }
+      },
+      `{id, user { id }}`
+    );
+
+    if (!cartItem)
+      throw new Error(
+        "No cart item found. The item you are trying to delete has probably been deleted"
+      );
+
+    // Check if the current signed in user owns the cart item
+    if (ctx.request.userId !== cartItem.user.id)
+      throw new Error("The item you are trying to delete is not yours");
+
+    // Actually delete the item from the cart
+    return await ctx.db.mutation.deleteCartItem(
+      {
+        where: { id: args.id }
+      },
+      info
+    );
   }
 };
 
