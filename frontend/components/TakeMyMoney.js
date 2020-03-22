@@ -48,6 +48,8 @@ const TakeMyMoney = ({ children }) => {
       alert(err.message);
     });
 
+    console.log(order);
+
     Router.push({
       pathname: "/order",
       query: {

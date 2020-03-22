@@ -51,7 +51,7 @@ const Query = {
       "ADMIN"
     );
 
-    if (!ownsOrder || !hasPermissionToSeeOrder)
+    if (!ownsOrder && !hasPermissionToSeeOrder)
       throw new Error("You don't have access to the order");
 
     return order;
