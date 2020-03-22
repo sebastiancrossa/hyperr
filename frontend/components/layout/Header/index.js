@@ -6,6 +6,7 @@ import NProgress from "nprogress";
 // Component Imports
 import Nav from "../Nav";
 import Cart from "../../Cart";
+import Search from "../../Search";
 
 // Styles
 import { Background, Logo } from "./header.style";
@@ -38,7 +39,7 @@ export const Header = () => {
       </div>
 
       <div className="sub-bar">
-        <p>Search</p>
+        <Search />
       </div>
 
       <Cart />

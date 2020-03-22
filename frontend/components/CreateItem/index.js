@@ -1,6 +1,7 @@
 // Libraries
 import { useState } from "react";
 import Router from "next/router";
+import { ALL_ITEMS_QUERY } from "../Items";
 
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
@@ -38,7 +39,10 @@ const CREATE_ITEM_MUTATION = gql`
 
 const CreateItem = () => {
   const [createItem, { data, loading, error }] = useMutation(
-    CREATE_ITEM_MUTATION
+    CREATE_ITEM_MUTATION,
+    {
+      refetchQueries: [{ query: ALL_ITEMS_QUERY }]
+    }
   );
 
   const [formState, setFormState] = useState({
