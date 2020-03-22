@@ -46,8 +46,6 @@ const RemoveFromCart = ({ id }) => {
           cartItem => cartItem.id !== cartItemId
         );
 
-        console.log(data);
-
         // Writing back to the cache with the updated cart
         cache.writeQuery({
           query: CURRENT_USER_QUERY,

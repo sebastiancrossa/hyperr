@@ -9,6 +9,7 @@ import NavStyles from "../../styles/NavStyles";
 // Component Imports
 import User from "../../User";
 import SignoutButton from "../../Signout";
+import CartCount from "../../CartCount";
 
 const Nav = () => {
   const [toggleCart, { data, loading }] = useMutation(TOGGLE_CART_MUTATION);
@@ -37,7 +38,15 @@ const Nav = () => {
                 <a>{data.name}</a>
               </Link>
 
-              <button onClick={toggleCart}>My Cart</button>
+              <button onClick={toggleCart}>
+                My Cart
+                <CartCount
+                  count={data.cart.reduce(
+                    (tally, cartItem) => tally + cartItem.quantity,
+                    0
+                  )}
+                />
+              </button>
               <SignoutButton />
             </>
           ) : (
