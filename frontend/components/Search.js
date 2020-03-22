@@ -1,6 +1,6 @@
 // Libraries
 import { useState } from "react";
-import Downshift from "downshift";
+import Downshift, { resetIdCounter } from "downshift";
 import Router from "next/router";
 import { ApolloConsumer } from "@apollo/react-common";
 import gql from "graphql-tag";
@@ -28,6 +28,16 @@ const SEARCH_ITEMS_QUERY = gql`
 `;
 // --- --- //
 
+// Function that routes the user to the searched item
+const routeToItem = item => {
+  Router.push({
+    pathname: "/item",
+    query: {
+      id: item.id
+    }
+  });
+};
+
 const Search = () => {
   const [itemState, setItemState] = useState({
     items: [],
@@ -53,33 +63,65 @@ const Search = () => {
     });
   }, 350); // The search query will be called after 350ms, this is to avoid any unecesarry query calls after every keyup
 
+  // Gets rid of a weird error with the server side rendering wiith downshift
+  resetIdCounter();
+
   return (
     <SearchStyles>
-      <div>
-        <ApolloConsumer>
-          {client => (
-            <input
-              type="search"
-              onChange={e => {
-                e.persist();
+      <Downshift
+        onChange={routeToItem}
+        itemToString={item => (item !== null ? item.title : "")}
+      >
+        {({
+          getInputProps,
+          getItemProps,
+          isOpen,
+          inputValue,
+          highlightedIndex
+        }) => (
+          <div>
+            <ApolloConsumer>
+              {client => (
+                <input
+                  {...getInputProps({
+                    type: "search",
+                    placeholder: "Search for an item",
+                    className: itemState.loading ? "loading" : "",
+                    onChange: e => {
+                      e.persist();
 
-                // Passing the event and apollo client to our external onChange function
-                onInputChange(e, client);
-              }}
-            />
-          )}
-        </ApolloConsumer>
+                      // Passing the event and apollo client to our external onChange function
+                      onInputChange(e, client);
+                    }
+                  })}
+                />
+              )}
+            </ApolloConsumer>
 
-        <DropDown>
-          {itemState.items &&
-            itemState.items.map(item => (
-              <DropDownItem key={item.id}>
-                <img width="50" src={item.image} alt={item.title} />
-                {item.title}
-              </DropDownItem>
-            ))}
-        </DropDown>
-      </div>
+            {isOpen && (
+              <DropDown>
+                {itemState.items &&
+                  itemState.items.map((item, index) => (
+                    <DropDownItem
+                      {...getItemProps({ item })}
+                      key={item.id}
+                      highlighted={index === highlightedIndex}
+                    >
+                      <img width="50" src={item.image} alt={item.title} />
+                      {item.title}
+                    </DropDownItem>
+                  ))}
+
+                {itemState.items &&
+                  !itemState.items.length &&
+                  !itemState.loading && (
+                    <DropDownItem>Nothing found for {inputValue}</DropDownItem>
+                  )}
+              </DropDown>
+            )}
+          </div>
+        )}
+      </Downshift>
     </SearchStyles>
   );
 };
