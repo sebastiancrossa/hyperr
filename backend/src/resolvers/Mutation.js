@@ -321,8 +321,6 @@ const Mutations = {
       0
     );
 
-    console.log(`Charging for a total of ${amount}`);
-
     // Creating an actual stripe charge
     const charge = await stripe.charges.create({
       amount,

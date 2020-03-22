@@ -29,6 +29,7 @@ type Query {
   itemsConnection(where: ItemWhereInput): ItemConnection!
   users: [User]!
   me: User
+  order(id: ID!): Order
 }
 
 # Redefining our user schema so we can limit what the front end can access

@@ -9,9 +9,6 @@ import StripeCheckout from "react-stripe-checkout";
 import NProgress from "nprogress";
 import calcTotalPrice from "../lib/calcTotalPrice";
 
-// Component Imports
-import Error from "./ErrorMessage";
-
 const totalItems = cart => {
   return cart.reduce((tally, cartItem) => tally + cartItem.quantity, 0);
 };
@@ -41,6 +38,8 @@ const TakeMyMoney = ({ children }) => {
   );
 
   const onToken = async res => {
+    NProgress.start();
+
     const order = await createOrder({
       variables: {
         token: res.id
@@ -49,7 +48,12 @@ const TakeMyMoney = ({ children }) => {
       alert(err.message);
     });
 
-    console.log(order);
+    Router.push({
+      pathname: "/order",
+      query: {
+        id: order.data.createOrder.id
+      }
+    });
   };
 
   if (loading) return <p>Loading...</p>;
