@@ -2,6 +2,7 @@
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { ALL_ITEMS_QUERY } from "../../index";
+import { CURRENT_USER_QUERY } from "../../../User";
 
 // --- GRAPHQL --- //
 const DELETE_ITEM_MUTATION = gql`
@@ -18,6 +19,14 @@ const DeleteItem = ({ toDelete, client, children }) => {
     variables: {
       id: toDelete
     },
+    refetchQueries: [
+      {
+        query: ALL_ITEMS_QUERY
+      },
+      {
+        query: CURRENT_USER_QUERY
+      }
+    ],
     update(cache, { data }) {
       // Manually update our cache on the client side so the website doesnt have to be reloaded
       // for the effect to be seen

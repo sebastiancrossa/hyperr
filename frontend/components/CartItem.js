@@ -7,6 +7,17 @@ import formatMoney from "../lib/formatMoney";
 import RemoveFromCart from "./RemoveFromCart";
 
 const CartItem = ({ cartItem }) => {
+  // Checking if the item exists (e.g. if an item gets deleted but a user has it on its cart)
+  if (!cartItem.item) {
+    return (
+      <CartItemStyles>
+        <p>Item removed</p>
+
+        <RemoveFromCart id={cartItem.id} />
+      </CartItemStyles>
+    );
+  }
+
   return (
     <CartItemStyles>
       <img src={cartItem.item.image} alt={cartItem.item.title} />

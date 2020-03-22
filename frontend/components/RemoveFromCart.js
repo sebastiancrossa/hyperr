@@ -23,6 +23,11 @@ const RemoveFromCart = ({ id }) => {
       variables: {
         id
       },
+      refetchQueries: [
+        {
+          query: CURRENT_USER_QUERY
+        }
+      ],
       optimisticResponse: {
         __typename: "Mutation",
         removeFromCart: {
