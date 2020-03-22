@@ -312,7 +312,7 @@ const Mutations = {
           id: userId
         }
       },
-      `{ id name email cart { id quantity item { title price id description image } } }`
+      `{ id name email cart { id quantity item { title price id description image largeImage } } }`
     );
 
     // Recalculating the total price on the server side - this is to prevent any type ofclient manipulation on the client side
@@ -329,6 +329,49 @@ const Mutations = {
       currency: "USD",
       source: token
     });
+
+    // CartItem -> OrderItem conversion
+    const orderItems = user.cart.map(cartItem => {
+      const orderItem = {
+        ...cartItem.item, // Creating a copy of every cartItem field
+        quantity: cartItem.quantity, // Adding a quantity and user, since all of the other fields are already presentend to us from the Cart Item
+        user: {
+          connect: {
+            id: userId
+          }
+        }
+      };
+
+      delete orderItem.id; // Getting rid of the Cart Item id, since we don't want to have it on or Order Item
+      return orderItem;
+    });
+
+    // Creating the order item with our array of Order Item
+    const order = await ctx.db.mutation.createOrder({
+      data: {
+        total: charge.amount,
+        charge: charge.id, // transaction id, just in case we need a reference to it in the future
+        items: {
+          create: orderItems
+        },
+        user: {
+          connect: {
+            id: userId
+          }
+        }
+      }
+    });
+
+    // Clear the users cart and delete the CartItems from said user object
+    const cartItemIds = user.cart.map(cartItem => cartItem.id); // Gives us an array of ids of all the items in a users cart
+
+    await ctx.db.mutation.deleteManyCartItems({
+      where: {
+        id_in: cartItemIds
+      }
+    }); // native prisma mutation - lets us perform the deletion
+
+    return order;
   }
 };
 

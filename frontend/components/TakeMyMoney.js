@@ -40,14 +40,16 @@ const TakeMyMoney = ({ children }) => {
     }
   );
 
-  const onToken = res => {
-    createOrder({
+  const onToken = async res => {
+    const order = await createOrder({
       variables: {
         token: res.id
       }
     }).catch(err => {
       alert(err.message);
     });
+
+    console.log(order);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -56,7 +58,9 @@ const TakeMyMoney = ({ children }) => {
     <User>
       {data => (
         <StripeCheckout
-          image={data.cart[0].item && data.cart[0].item.image}
+          image={
+            data.cart.length && data.cart[0].item && data.cart[0].item.image
+          }
           amount={calcTotalPrice(data.cart) * 100}
           name="Hyperrr"
           description={`Order of ${totalItems(data.cart)} items`}
