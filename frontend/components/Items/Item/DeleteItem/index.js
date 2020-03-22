@@ -1,8 +1,10 @@
 // Libraries
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
+
 import { ALL_ITEMS_QUERY } from "../../index";
 import { CURRENT_USER_QUERY } from "../../../User";
+import { PAGINATION_QUERY } from "../../../Pagination";
 
 // --- GRAPHQL --- //
 const DELETE_ITEM_MUTATION = gql`
@@ -25,6 +27,9 @@ const DeleteItem = ({ toDelete, client, children }) => {
       },
       {
         query: CURRENT_USER_QUERY
+      },
+      {
+        query: PAGINATION_QUERY
       }
     ],
     update(cache, { data }) {
