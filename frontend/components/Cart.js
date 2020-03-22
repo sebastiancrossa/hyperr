@@ -7,6 +7,7 @@ import formatMoney from "../lib/formatMoney";
 // Component Imports
 import User from "./User";
 import CartItem from "./CartItem";
+import TakeMyMoney from "./TakeMyMoney";
 
 import CartStyles from "./styles/CartStyles";
 import Supreme from "./styles/Supreme";
@@ -60,7 +61,10 @@ const Cart = () => {
 
             <footer>
               <p>{formatMoney(calcTotalPrice(userData.cart))}</p>
-              <SickButton>Checkout</SickButton>
+
+              <TakeMyMoney>
+                <SickButton>Checkout</SickButton>
+              </TakeMyMoney>
             </footer>
           </CartStyles>
         )
